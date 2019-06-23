@@ -11,13 +11,13 @@ https://cdn.pimylifeup.com/wp-content/uploads/2015/09/Raspberry-Pi-GPIO-pinout-d
 
 ## Pinout of all components of the project
 
-|  PIN FISICO  | GPIO |
-|:------------:|:----:|
-| LED ROJO IZQ |   7  |
-| LED VERD IZQ |  11  |
-|   ECHO IZQ   |  14  |
-|   TRIG IZQ   |  15  |
-| LED ROJO DER |  17  |
-| LED VERD DER |  27  |
-|   ECHO DER   |   4  |
-|   TRIG DER   |  25  |
+|  PIN FISICO  | GPIO | BOARD PIN |
+|:------------:|:----:|-----------|
+| LED ROJO IZQ |  11  |     23    |
+| LED VERD IZQ |   9  |     21    |
+|   ECHO IZQ   |  14  |     8     |
+|   TRIG IZQ   |  15  |     10    |
+| LED ROJO DER |  17  |     11    |
+| LED VERD DER |  27  |     13    |
+|   ECHO DER   |   4  |     7     |
+|   TRIG DER   |  25  |     22    |
