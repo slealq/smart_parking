@@ -8,7 +8,9 @@ https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf
 Pinout Raspberry pi:
 https://cdn.pimylifeup.com/wp-content/uploads/2015/09/Raspberry-Pi-GPIO-pinout-diagram-new.png
 
-Conexiones de pines
+
+## Pinout of all components of the project
+
 |  PIN FISICO  | GPIO |
 |:------------:|:----:|
 | LED ROJO IZQ |   7  |
