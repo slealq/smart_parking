@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 class DistanceSensor():
-    def __init__(sefl, trig_pin, echo_pin):
+    def __init__(self, trig_pin, echo_pin):
         SETTLE_WAIT = 2
 
         assert isinstance(trig_pin, int), "Please provide trig pin"
@@ -11,6 +11,7 @@ class DistanceSensor():
         self.echo_pin = echo_pin
 
         # Setup the pins
+        GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.trig_pin, GPIO.OUT)
         GPIO.setup(self.echo_pin, GPIO.IN)
         GPIO.output(self.trig_pin, GPIO.LOW)
@@ -18,7 +19,7 @@ class DistanceSensor():
         # Wait sensor to settle
         time.sleep(SETTLE_WAIT)
 
-    def distance():
+    def distance(self):
         BETWEEN_TRIG = 0.00001
 
         GPIO.output(self.trig_pin, GPIO.HIGH)
@@ -31,9 +32,9 @@ class DistanceSensor():
             pulse_end_time = time.time()
 
         pulse_duration = pulse_end_time - pulse_start_time
-        self.distance = round(pulse_duration * 17150, 2)
+        self._distance = round(pulse_duration * 17150, 2)
 
-        return self.distance
+        return self._distance
 
     def __del__(self):
         GPIO.cleanup()
