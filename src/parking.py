@@ -5,13 +5,13 @@ import time
 
 class ParkingSpace():
     def __init__(self,
-                 name = None: str
-                 rl_pin = None:int,
-                 gl_pin = None: int,
-                 echo = None: int,
-                 trig = None: int,
-                 down_dist = 6: int,
-                 up_dist = 8: int):
+                 name: str = None,
+                 rl_pin: int = None,
+                 gl_pin: int = None,
+                 echo: int = None,
+                 trig: int = None,
+                 down_dist: float = 10.0,
+                 up_dist: float = 12.0):
 
         self.name = name
         self.rl_pin = rl_pin
@@ -41,11 +41,11 @@ class ParkingSpace():
 
         return self._state
 
-    def update_sign():
-        if self._state = 'EMPTY':
+    def update_sign(self):
+        if self._state == 'EMPTY':
             self.green_led.on()
             self.red_led.off()
-        elif self.state = 'OCCUPIED':
+        elif self._state == 'OCCUPIED':
             self.green_led.off()
             self.red_led.on()
         else:
@@ -81,9 +81,9 @@ class ParkingLot():
     def run(self):
         while True:
             time.sleep(0.2)
-            print("Left parking state: {1}"
+            print("Left parking state: {0}"
                   "".format(self.left_parking.state()))
-
+            print(self.left_parking.distance_sensor.distance())
             self.left_parking.update_sign()
 
     def __del__(self):
