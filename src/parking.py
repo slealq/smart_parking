@@ -60,6 +60,10 @@ class ParkingSpace():
 
 class ParkingLot():
     def __init__(self):
+        # Cycle period
+        self.parking_spaces = 2
+        self.sleep_time = 0.2 / self.parking_spaces
+
         # LEFT SIDE PINS
         self.LR_LED = 23
         self.LG_LED = 21
@@ -72,19 +76,30 @@ class ParkingLot():
         self.R_ECHO = 7
         self.R_TRIG = 22
 
-        self.left_parking = ParkingSpace(name='left',
+        # Define parkings
+        self.left_parking = ParkingSpace(name='Left',
                                          rl_pin=self.LR_LED,
                                          gl_pin=self.LG_LED,
                                          echo=self.L_ECHO,
                                          trig=self.L_TRIG)
 
+        self.right_parking = ParkingSpace(name='Right',
+                                          rl_pin=self.RR_LED,
+                                          gl_pin=self.RG_LED,
+                                          echo=self.R_ECHO,
+                                          trig=self.R_TRIG)
+
+        # All parkings
+        self.all_parking_spaces = [self.left_parking]
+
     def run(self):
         while True:
-            time.sleep(0.2)
-            print("Left parking state: {0}"
-                  "".format(self.left_parking.state()))
-            print(self.left_parking.distance_sensor.distance())
-            self.left_parking.update_sign()
+            for parking in self.all_parking_spaces:
+                time.sleep(self.sleep_time)
+                print("{0} parking state: {1}"
+                      "".format(parking.name, parking._state))
+                print(parking.distance_sensor.distance())
+                parking.update_sign()
 
     def __del__(self):
         del self.left_parking
