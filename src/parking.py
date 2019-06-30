@@ -90,7 +90,7 @@ class ParkingLot():
                                           trig=self.R_TRIG)
 
         # All parkings
-        self.all_parking_spaces = [self.left_parking]
+        self.all_parking_spaces = [self.left_parking, self.right_parking]
 
     def run(self):
         while True:
