@@ -1,5 +1,6 @@
 from sensors import DistanceSensor
 from actuators import Led
+from cloud import Client
 import time
 
 
@@ -52,6 +53,13 @@ class ParkingSpace():
             self.green_led.off()
             self.red_led.off()
 
+    def __repr__(self):
+        return ','.join(['{name}={value}'.format(name=name, value=value)
+                         for name, value in self.__dict__.items()])
+
+    def __hash__(self):
+        return hash(repr(self))
+
     def __del__(self):
         del self.green_led
         del self.red_led
@@ -76,6 +84,9 @@ class ParkingLot():
         self.R_ECHO = 7
         self.R_TRIG = 22
 
+        # New client
+        self.cloud_client = Client()
+
         # Define parkings
         self.left_parking = ParkingSpace(name='Left',
                                          rl_pin=self.LR_LED,
@@ -89,8 +100,17 @@ class ParkingLot():
                                           echo=self.R_ECHO,
                                           trig=self.R_TRIG)
 
-        # All parkings
-        self.all_parking_spaces = [self.left_parking, self.right_parking]
+        # All parkings state
+        self.all_parking_spaces = {self.left_parking: 'UNINIT',
+                                   self.right_parking: 'UNINIT'}
+
+    def check_state_change(self):
+        for past_state, parking in all_parking_spaces_state.items():
+            current_state = parking.state()
+
+            if past_state != current_state:
+                self.cloud_client.test_data()
+                all_parking_spaces_state[parking] = current_state
 
     def run(self):
         while True:
@@ -99,6 +119,8 @@ class ParkingLot():
                 print("{0} parking state: {1}"
                       "".format(parking.name, parking.state()))
                 parking.update_sign()
+
+            self.check_state_change()
 
     def __del__(self):
         for parking in self.all_parking_spaces:
