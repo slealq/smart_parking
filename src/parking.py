@@ -90,19 +90,19 @@ class ParkingLot():
                                           trig=self.R_TRIG)
 
         # All parkings
-        self.all_parking_spaces = [self.left_parking]
+        self.all_parking_spaces = [self.left_parking, self.right_parking]
 
     def run(self):
         while True:
             for parking in self.all_parking_spaces:
                 time.sleep(self.sleep_time)
                 print("{0} parking state: {1}"
-                      "".format(parking.name, parking._state))
-                print(parking.distance_sensor.distance())
+                      "".format(parking.name, parking.state()))
                 parking.update_sign()
 
     def __del__(self):
-        del self.left_parking
+        for parking in self.all_parking_spaces:
+            del parking
 
 
 __all__ = ['ParkingSpace', 'ParkingLot']
