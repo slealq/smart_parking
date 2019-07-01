@@ -33,10 +33,13 @@ class Client():
         self.PORT = port
         self.TARGET_HOST = target_host
         self.socket = socket()
-        self.socket.connect((self.TARGET_HOST. self.PORT))
+        self.socket.connect((self.TARGET_HOST, self.PORT))
 
     def test_data(self):
-        self.socket.send('This is a test')
+        self.socket.send(bytes('This is a test', 'utf-8'))
+
+    def send_data(self, data: str):
+        self.socket.send(bytes(data, 'utf-8'))
 
     def __del__(self):
         self.socket.close()

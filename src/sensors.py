@@ -26,12 +26,15 @@ class DistanceSensor():
         time.sleep(BETWEEN_TRIG)
         GPIO.output(self.trig_pin, GPIO.LOW)
 
+        pulse_start_time = time.time()
+        pulse_end_time = time.time()
+
         while GPIO.input(self.echo_pin)==0:
             pulse_start_time = time.time()
         while GPIO.input(self.echo_pin)==1:
             pulse_end_time = time.time()
 
-        pulse_duration = pulse_end_time - pulse_start_time
+        pulse_duration = abs(pulse_end_time - pulse_start_time)
         self._distance = round(pulse_duration * 17150, 2)
 
         return self._distance

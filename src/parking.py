@@ -2,7 +2,7 @@ from sensors import DistanceSensor
 from actuators import Led
 from cloud import Client
 import time
-
+from json import dumps
 
 class ParkingSpace():
     def __init__(self,
@@ -54,8 +54,7 @@ class ParkingSpace():
             self.red_led.off()
 
     def __repr__(self):
-        return ','.join(['{name}={value}'.format(name=name, value=value)
-                         for name, value in self.__dict__.items()])
+        return self.name
 
     def __hash__(self):
         return hash(repr(self))
@@ -68,6 +67,10 @@ class ParkingSpace():
 
 class ParkingLot():
     def __init__(self):
+        # ParkingLot code
+        self.CODE = 'A'
+        self.SPACES = 2 # Total spaces available in this parking lot
+
         # Cycle period
         self.parking_spaces = 2
         self.sleep_time = 0.2 / self.parking_spaces
@@ -101,16 +104,40 @@ class ParkingLot():
                                           trig=self.R_TRIG)
 
         # All parkings state
-        self.all_parking_spaces = {self.left_parking: 'UNINIT',
-                                   self.right_parking: 'UNINIT'}
+        self.all_parking_spaces = {self.left_parking: 'EMPTY',
+                                   self.right_parking: 'EMPTY'}
+
+        # Parking Lot available
+        self.available_spaces = self.SPACES
+
+    def send_state_change(self):
+        empty_spaces = 0
+
+        for parking, state in self.all_parking_spaces.items():
+            if state == 'EMPTY':
+                empty_spaces += 1
+
+        state_change_json = {
+            'parking_code': self.CODE,
+            'current_available_spaces': empty_spaces,
+            'usage': (self.SPACES - empty_spaces) * 100.0 / self.SPACES
+        }
+
+        state_change_json_repr = dumps(state_change_json)
+
+        self.cloud_client.send_data(state_change_json_repr)
+        self.available_spaces = empty_spaces
 
     def check_state_change(self):
-        for past_state, parking in all_parking_spaces_state.items():
+        parking_spaces = list(self.all_parking_spaces.keys())
+        for parking in parking_spaces:
+            past_state = self.all_parking_spaces[parking]
             current_state = parking.state()
 
             if past_state != current_state:
                 self.cloud_client.test_data()
-                all_parking_spaces_state[parking] = current_state
+                self.all_parking_spaces[parking] = current_state
+                self.send_state_change()
 
     def run(self):
         while True:
