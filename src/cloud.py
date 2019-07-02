@@ -1,10 +1,16 @@
-from socket import socket
+from socket import *
+from json import loads
 
 class Server():
-    def __init__(self, port=12345):
+    usage = None
+
+    def __init__(self, conn=None, port=12345):
         self.PORT = port
         self.socket = socket()
+        self.data = ""
+        self.conn = conn
         print("Socket created succesfully")
+        self.socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         self.socket.bind(('', self.PORT))
         print("Socket binded to {port}".format(port=self.PORT))
         self.socket.listen(5)
@@ -16,6 +22,13 @@ class Server():
 
         return conn
 
+    def update_usage(self):
+        if self.data:
+            self.usage = loads(self.data)['usage']
+
+        # send the usage through a pipe
+        self.conn.send(self.usage)
+
     def receive_data(self, conn):
         data = conn.recv(1024)
         return data
@@ -23,11 +36,14 @@ class Server():
     def run(self):
         conn = self.establish_connection()
         while True:
-            data = self.receive_data(conn)
-            print(data)
+            self.data = self.receive_data(conn)
+            print(self.data)
+            self.update_usage()
+            print("New usage: {0}".format(self.usage))
 
     def __del__(self):
         self.socket.close()
+        self.conn.close()
 
 class Client():
     def __init__(self, port=12345, target_host='192.168.0.2'):
