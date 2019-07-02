@@ -25,6 +25,7 @@ class Server():
         while True:
             data = self.receive_data(conn)
             print(data)
+
     def __del__(self):
         self.socket.close()
 
