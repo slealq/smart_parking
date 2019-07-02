@@ -135,7 +135,6 @@ class ParkingLot():
             current_state = parking.state()
 
             if past_state != current_state:
-                self.cloud_client.test_data()
                 self.all_parking_spaces[parking] = current_state
                 self.send_state_change()
 
